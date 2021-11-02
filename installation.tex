@@ -1,0 +1,498 @@
+\documentclass[11pt]{article}
+
+\usepackage[top=1in,bottom=1.25in,left=1.25in,right=1.25in]{geometry}
+
+\usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage{tabto}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{subfigure}
+\usepackage{amscd}
+\usepackage{color}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\usepackage{afterpage}
+\usepackage{fancybox}
+\usepackage{ifthen}
+\usepackage{multicol}
+\usepackage[font=footnotesize]{caption}
+
+
+\usepackage{lmodern}
+%\usepackage{newtxtext}
+%\usepackage{newtxmath}https://www.overleaf.com/project/5e8260a3d5a8e1000145aa85
+\usepackage{siunitx}
+\sisetup{range-phrase=--, fixed-exponent=2, range-units =single, table-number-alignment =center, table-figures-exponent=1}
+\usepackage[sf,bf,medium]{titlesec}
+
+%\usepackage{bm}
+\usepackage{dsfont}
+\usepackage{booktabs}
+%\usepackage{isomath}
+%\newcommand{\vct}{\vectorsym}
+%\newcommand{\mtx}{\matrixsym}
+
+
+\newcommand\dbarb{\bar{\partial}_b}
+\newcommand\boxb{\square_b}
+\DeclareMathOperator\eo{eo}
+\DeclareMathOperator\ooee{oe}
+%\newcommand\comp{\operatorname{comp}}
+\newcommand\w{\wedge}
+\newcommand{\todo}[1]{{\color{red}#1}}
+\newcommand\dx{\dot{x}}
+\newcommand\dz{\dot{z}}
+\newcommand\dVol{\operatorname{dV}}
+\newcommand\lot{\operatorname{l.o.t.}}
+\newcommand\Reg{\operatorname{Reg}}
+\newcommand\dom{\operatorname{Dom}}
+\newcommand\diag{\operatorname{diag}}
+\newcommand\loc{\operatorname{loc}}
+\newcommand\Dom{\operatorname{Dom}}
+\newcommand\Dir{\operatorname{Dir}}
+\newcommand\Def{\operatorname{Def}}
+\newcommand\cdeg{\operatorname{c-deg}}
+\newcommand\sing{\operatorname{Sing}}
+\newcommand\sign{\operatorname{sig}}
+\newcommand\SW{\operatorname{SW}}
+\newcommand\dist{\operatorname{dist}}
+\newcommand\eucl{\operatorname{eucl}}
+\newcommand\relp{\operatorname{P}}
+\newcommand\Span{\operatorname{span}}
+\newcommand\tot{\operatorname{tot}}
+\newcommand\In{\operatorname{in}}
+\newcommand\scat{\operatorname{scat}}
+\newcommand\Int{\operatorname{int}}
+\newcommand\hone{h^{(1)}}
+\newcommand\out{\operatorname{out}}
+\newcommand\spnc{\operatorname{Spin}_{\bbC}}
+\newcommand\Th{\operatorname{th}}
+\newcommand\Tr{\operatorname{tr}}
+\newcommand\iso{\operatorname{iso}}
+\newcommand\Spec{\operatorname{spec}}
+\newcommand\hn{(1,-\frac 12)}
+\newcommand\cT{\mathcal T}
+\newcommand\cM{\mathcal M}
+\newcommand\cN{\mathcal N}
+\newcommand\cH{\mathcal H}
+\newcommand\cI{\mathcal I}
+\newcommand\cJ{\mathcal J}
+\newcommand\cO{\mathcal O}
+\newcommand\cU{\mathcal U}
+\newcommand\cV{\mathcal V}
+\newcommand\sO{\mathfrak O}
+\newcommand\fT{\mathfrak T}
+\newcommand\cQ{\mathcal Q}
+\newcommand\cK{\mathcal K}
+\newcommand\cG{\mathcal G}
+\newcommand\cB{\mathcal B}
+\newcommand\cR{\mathcal R}
+\newcommand\cP{\mathcal P}
+\newcommand{\ccD}{\mathfrak D}
+\newcommand\ho{\mathfrak H}
+\newcommand\px{\tilde x}
+\newcommand\pz{\tilde z}
+\newcommand\bc{\boldsymbol c}
+\newcommand\bb{\boldsymbol b}
+\newcommand\ba{\boldsymbol a}
+\newcommand\bzero{\boldsymbol 0}
+\newcommand\balpha{\boldsymbol \alpha}
+\newcommand\bgamma{\boldsymbol \gamma}
+\newcommand\btheta{\boldsymbol \theta}
+\newcommand\bpsi{\overline{\psi}}
+\newcommand\bEta{\boldsymbol \eta}
+\newcommand\tbEta{\widetilde{\boldsymbol \eta}}
+\newcommand\tbB{\widetilde{\boldsymbol B}}
+\newcommand\bBeta{\boldsymbol \beta}
+\newcommand\bj{\boldsymbol j}
+\newcommand\bl{\boldsymbol l}
+\newcommand\tj{\widetilde j}
+\newcommand\tphi{\widetilde \phi}
+\newcommand\tpsi{\widetilde \psi}
+\newcommand\tk{\tilde k}
+\newcommand\tu{\widetilde u}
+\newcommand\tv{\widetilde v}
+\newcommand\tD{\widetilde D}
+\newcommand\tM{\widetilde M}
+\newcommand\tN{\widetilde N}
+\newcommand\tP{\widetilde P}
+\newcommand\tL{\widetilde L}
+\newcommand\hdy{\widehat{dy}}
+\newcommand\hdx{\widehat{dx}}
+%%\newcommand\bk{\boldsymbol k}
+\newcommand\bm{\boldsymbol m}
+\newcommand\bK{\boldsymbol K}
+\newcommand\bv{\boldsymbol v}
+\newcommand\bn{\boldsymbol n}
+\newcommand\br{\boldsymbol r}
+\newcommand\tbn{\boldsymbol {\tilde{n}}}
+\newcommand\bq{\boldsymbol q}
+\newcommand\bx{\boldsymbol x}
+\newcommand\by{\boldsymbol y}
+\newcommand\hbx{\hat{\boldsymbol x}}
+\newcommand\bA{\boldsymbol A}
+\newcommand\bB{\boldsymbol B}
+\newcommand\bD{\boldsymbol D}
+\newcommand\bH{\boldsymbol H}
+\newcommand\bL{\boldsymbol L}
+\newcommand\bE{\boldsymbol E}
+\newcommand\bV{\boldsymbol V}
+\newcommand\bJ{\boldsymbol J}
+\newcommand\bN{\boldsymbol N}
+\newcommand\bP{\boldsymbol P}
+\newcommand\bR{\boldsymbol R}
+\newcommand\bX{\boldsymbol X}
+\newcommand\bY{\boldsymbol Y}
+\newcommand\bPhi{\boldsymbol \Phi}
+\newcommand\bPsi{\boldsymbol \Psi}
+
+\newcommand\bT{\boldsymbol T}
+\newcommand\fS{\mathfrak S}
+\newcommand\bcP{\bar{\cP}}
+\newcommand\tcP{\widetilde{\cP}}
+\newcommand\cF{\mathcal F}
+\newcommand\cE{\mathcal E}
+\newcommand\cW{\mathcal W}
+\newcommand\bS{\bar{S}}
+\newcommand\bF{\bar{F}}
+\newcommand\bcF{\bar{\cF}}
+\newcommand\dbar{\bar{\pa}}
+\newcommand\dbnc{\dbar\rho\rfloor}
+\newcommand\tnabla{\widetilde{\nabla}}
+\newcommand\bz{\bar{z}}
+\newcommand\sypr{\pi}
+\newcommand\syprc{\bar{\pi}}
+\newcommand\scp{\mathfrak p}
+\newcommand\sd{\mathfrak d}
+\newcommand\bzeta{\bar{\zeta}}
+\newcommand\bxi{\boldsymbol \xi}
+\newcommand\tbxi{\widetilde{\bxi}}
+\newcommand\tbE{\widetilde{\bE}}
+\newcommand\tbH{\widetilde{\bH}}
+\newcommand\bXi{\boldsymbol \Xi}
+\newcommand\bcQ{\bar{\mathcal Q}}
+\newcommand\starb{\star_b}
+\newcommand\talpha{\widetilde{\alpha}}
+\newcommand\tbeta{\widetilde{\beta}}
+\newcommand\tgamma{\widetilde{\gamma}}
+\newcommand\ta{\widetilde{a}}
+\newcommand\tq{\widetilde{q}}
+\newcommand\tQ{\widetilde{Q}}
+\newcommand\txi{\widetilde{\xi}}
+\newcommand\tOmega{\widetilde{\Omega}}
+\newcommand\tX{\widetilde{X}}
+\newcommand\pX{X'}
+\newcommand\thX{\widetilde{\pX}}
+\newcommand\hX{\widehat{X}}
+\newcommand\hx{\widehat{x}}
+\newcommand\hg{\widehat{g}}
+\newcommand\hmu{\widehat{\mu}}
+\newcommand\hD{\widehat{D}}
+\newcommand\hpsi{\widehat{\psi}}
+\newcommand\tK{\widetilde{K}}
+\newcommand\sh[1]{\overset{\sqcap}{#1}}
+\newcommand\RC[1]{{}^R\overline{T^*{#1}}}
+\newcommand\HC[1]{{}^H\overline{T^*{#1}}}
+\newcommand\EHC[1]{{}^{eH}\overline{T^*{#1}}}
+\newcommand\sym[1]{{}^{#1}\sigma}
+\newcommand\esym[2]{{}^{#1}\sigma^{#2}}
+\newcommand\Tzo[1]{{}^{#1}T^{0,1}}
+\newcommand\Toz[1]{{}^{#1}T^{1,0}}
+\newcommand\ie{i\@.e\@.\ }
+\newcommand\eg{e\@.g\@. }
+\newcommand\viz{\emph{viz\@.}}
+\newcommand{\Spn}{S\mspace{-10mu}/ }
+\newcommand{\THME[1]}{THME(#1)}
+
+\newcommand\CC{\hbox{\mathbb C}}
+\newcommand\DD{\hbox{\mathbb D}}
+\newcommand\RR{\hbox{\mathbb R}}
+\newcommand\PP{\hbox{\mathbb P}}
+\newcommand\bsl{\backslash}
+\newcommand\ep{\varepsilon}
+%\newcommand\pa{\partial}
+\newcommand\vphi{\varphi}
+
+
+\newcommand\Ker{\operatorname{ker}}
+\newcommand\PV{\operatorname{P.V.}}
+\newcommand\coker{\operatorname{coker}}
+\newcommand\hotimes{\hat\otimes}
+\newcommand\cA{\mathcal{A}}
+\newcommand\cC{\mathcal{C}}
+\newcommand\cL{\mathcal{L}}
+\newcommand\cS{\mathcal{S}}
+\newcommand\hcS{\widehat{\mathcal{S}}}
+\newcommand\bcS{\bar{\mathcal{S}}}
+\newcommand\cD{\mathcal{D}}
+\newcommand\hz{\hat z}
+\newcommand\hOmega{\widehat \Omega}
+\newcommand\cz{\check z}
+\newcommand\hal{\hat \alpha }
+\newcommand\hZ{\hat Z}
+\newcommand\cZ{\check Z}
+\newcommand\dZ{\dot Z}
+\newcommand\hu{\hat u}
+\newcommand\cu{\check u}
+\newcommand\hv{\hat v}
+\newcommand\cv{\check v}
+\newcommand\hzeta{\hat\zeta}
+\newcommand\czeta{\check\zeta}
+\newcommand\dzeta{\dot\zeta}
+\newcommand\hsigma{\hat\sigma}
+\newcommand\sigmah{\sigma^H}
+\newcommand\nsigma{\sigma_\nu}
+\newcommand\bsigma{\sigma_b}
+\newcommand\tsigma{\tilde\sigma}
+\newcommand\vol{\operatorname{vol}}
+\newcommand\tf{\tilde{f}}
+\newcommand\bZ{\overline{Z}}
+\newcommand\Zup{\overline{\bbC_+}}
+\newcommand\bW{\overline{W}}
+\newcommand\bomega{\boldsymbol{\omega}}
+%%%%% Some general AMSLatex macros
+%\setlength{\marginparwidth}{0.72in}
+%\newcommand{\mar}[1]{{\marginpar{\sffamily{\scriptsize #1}}}}
+%{{\marginpar{\textsf{#1}}}}
+\newcommand\datver[1]{\def\datverp%
+ {\par\boxed{\boxed{\text{#1; Run: \today}}}}}
+\newcommand\ha{\frac12}
+\newcommand\oqu{\frac14}
+\renewcommand\Re{\operatorname{Re}}
+\renewcommand\Im{\operatorname{Im}}
+\newcommand\fiber{\operatorname{fiber}}
+\newcommand\fdim{\operatorname{fiber-dim}}
+\newcommand\fa{\mathfrak a}
+\newcommand\fb{\mathfrak b}
+\newcommand\fc{\mathfrak c}
+\newcommand\CAS{\mathcal{S}}
+\newcommand\CAFS{\mathcal{FS}}
+\newcommand\CAJ{\mathcal{J}}
+\newcommand\bbB{\mathbb B}
+\newcommand\bbC{\mathbb C}
+\newcommand\bbD{\mathbb D}
+\newcommand\bbH{\mathbb H}
+\newcommand\bbQ{\mathbb Q}
+\newcommand\bbN{\mathbb N}
+\newcommand\bbP{\mathbb P}
+\newcommand\bbR{\mathbb R}
+\newcommand\bbZ{\mathbb Z}
+\newcommand\bbS{\mathbb S}
+\newcommand\bbT{\mathbb T}
+\newcommand\Npat{N_{\textrm{patches}}}
+\newcommand\smax{s_{\textrm{max}}}
+\newcommand\nmax{n_{\textrm{max}}}
+\newcommand\smin{s_{\textrm{min}}}
+\newcommand\niter{n_{\textrm{iter}}}
+\newcommand\pa{\partial}
+\newcommand\om{\omega}
+\newcommand\Drho{\lambda}
+\newcommand\restrictedto{\upharpoonright}
+\newcommand\op{\operatorname{op}}
+\newcommand\supp{\operatorname{supp}}
+        %Support
+\newcommand\singsupp{\operatorname{singsupp}}
+\newcommand\subsubset{\subset\!\subset}
+\newcommand\ins[1]{{#1}^{\circ}}
+\newcommand\ci{${\mathcal C}^{\infty}$}
+        %`Cinfinity' in text mode
+\newcommand\dCI{\dot{\mathcal C}^{\infty}}
+        %The space of smooth functions vanishing to all orders at boundary
+\newcommand\LA{{\mathcal L}}
+        %The space of Laurent functions
+\newcommand\CI{{\mathcal C}^{\infty}}
+        %The space of smooth functions
+\newcommand\CO{{\mathcal C}^{0}}
+        %The space of continuous functions
+\newcommand\BCI{{\mathcal C}^{\infty}_{\infty}}
+        %The space of smooth functions with all derivatives bounded
+\newcommand\CIc{{\mathcal C}^{\infty}_{\text{c}}}
+        %The space of smooth functions of compact support
+\newcommand\CmI{{\mathcal C}^{-\infty}}
+        %The space of extendible distributions
+\newcommand\CmIc{{\mathcal C}^{-\infty}_{\text{c}}}
+        %The space of distributions of compact support
+\newcommand\dCmI{\dot{\mathcal C}^{-\infty}}
+        %The space of supported distributions
+\newcommand\Id{\operatorname{Id}}
+\newcommand\Sgn{\operatorname{sgn}}
+        %Identity operator
+\newcommand\Meven{\text{ even }}
+        %and inside math mode
+\newcommand\Modd{\text{ odd }}
+        %and inside math mode
+\newcommand\Mand{\text{ and }}
+        %and inside math mode
+\newcommand\Mandset{\text{ and set}}
+        %and inside math mode
+\newcommand\Mas{\text{ as }}
+        %as inside math mode
+\newcommand\Mat{\text{ at }}
+        %at inside math mode
+\newcommand\Mfor{\text{ for }}
+        %for inside math mode
+\newcommand\Mif{\text{ if }}
+        %if inside math mode
+\newcommand\Mie{\text{ \ie\ }}
+        %i.e. inside math mode
+\newcommand\Min{\text{ in }}
+        %in inside math mode
+\newcommand\Mnear{\text{ near }}
+        %near inside math mode
+\newcommand\Mon{\text{ on }}
+        %on inside math mode
+\newcommand\Mover{\text{ over }}
+        %over inside math mode
+\newcommand\Mprovided{\text{ provided }}
+        %provided inside math mode
+\newcommand\Mwith{\text{ with }}
+        %with inside math mode
+\newcommand\Mso{\text{ so }}
+        %so inside math mode
+\newcommand\Msuchthat{\text{ such that }}
+        %such that inside math mode
+\newcommand\Mthen{\text{ then }}
+        %then inside math mode
+\newcommand\Mwhere{\text{ where }}
+        %where inside math mode
+\DeclareMathOperator*{\Pf}{Pf}
+        %Coefficient of the constant term
+\DeclareMathOperator{\rank}{rank}
+        %Rank = fibre dimension
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\range}{range}
+        %Range
+\DeclareMathOperator{\odd}{o}
+\DeclareMathOperator{\even}{e}
+\DeclareMathOperator{\Ind}{Ind}
+        %Index
+\DeclareMathOperator{\Nul}{Nul}
+        %Null space
+\DeclareMathOperator{\Rind}{R-Ind}
+\DeclareMathOperator{\tind}{t-Ind}
+        %Relative index
+\DeclareMathOperator{\ind}{Ind}
+\DeclareMathOperator{\Hom}{Hom}
+        %Homomorphism
+\DeclareMathOperator{\Stab}{St}
+        %Stabilizing map
+\DeclareMathOperator{\Ah}{\widehat A}
+        %A-hat genus
+\DeclareMathOperator{\Ch}{Ch}
+        %Chern character
+\DeclareMathOperator{\Thom}{Th}
+        %The Thom isomorphism
+\DeclareMathOperator{\bCh}{\overline{Ch}}
+        %extended Chern (non-)character
+\DeclareMathOperator{\dR}{dR}
+        %deRham
+\DeclareMathOperator{\Td}{Td}
+        %Todd class
+\DeclareMathOperator{\GL}{GL}
+        %General linear group
+\DeclareMathOperator{\BF}{BF}
+        %Bargmann-Fock
+
+%%%%% Theorem type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{sublemma}{Sublemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{question}{Question}
+\newtheorem{example}{Example}
+\newtheorem{conjecture}{Conjecture}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+
+\numberwithin{equation}{section}
+
+\crefname{equation}{}{}
+
+
+
+
+\begin{document}
+
+
+%\maketitle
+
+
+
+  \vspace{4\baselineskip}
+
+  {\raggedright
+  \LARGE \sffamily\bfseries Installation instructions\\}
+    \hrulefill
+  
+  
+
+
+ \vspace{\baselineskip}
+
+
+\section{chunkie}
+\subsection{Option 1: Command line installation}
+To get chunkie with all its dependencies, clone it from~\url{https://github.com/fastalgorithms/chunkie}
+as \vspace*{2ex}\newline
+\ovalbox{git clone --recurse-submodules https://github.com/fastalgorithms/chunkie.git}
+\vspace*{2ex}\newline
+You will need to switch to the \textit{dev-rcip} branch to use the widget. This can be done by running
+\vspace*{2ex}\newline
+\ovalbox{git checkout dev-rcip} 
+\vspace*{2ex}\newline
+Then you can run \textit{startup.m} to add both chunkie and its dependencies to the
+MATLAB path. 
+
+\subsection{Option 2: Package download and install}
+Download the \textit{dev-rcip} branch of chunkie from~\url{https://github.com/fastalgorithms/chunkie} 
+and download FLAM from~\url{https://github.com/klho/FLAM}. In each of the respective directories
+run \textit{startup.m} to add the relevant directories to the MATLAB path.
+
+\subsection{Testing the installation}
+
+In order to test the accurate installation of the correct version of the chunkie package,
+you can run \textit{testclm4.m} located at \textit{chunkie/clmtest}. 
+The code should run in a few seconds,
+(it takes less than 5 seconds on a 2019 Macbook Pro) and the last line should report 
+an error less than $10^{-12}$.
+
+If you can't find the relevant folder, then with
+high likelihood you are on the incorrect branch.
+
+
+\section{fmm2d}
+For some of the post processing, you will also need the matlab interfaces from the fast
+multipole library in two dimensions. You can try using the precompiled MATLAB interfaces
+available in the ``fmm2d\_matlab\_binaries'' folder. To make them available to the widget, 
+just run ``startup\_fmm2d.m'' to add the relevant folder to the PATH. 
+
+To verify successful installation of the fmm2d library, you can run the {\textit test\_fmm.m} 
+script in the {\textit folder}. It should report back with ``Successfully completed 2 out of 2 tests in fmm2d package''.
+
+In case the installation fails, you can generate the MATLAB interfaces for the fmm2d library by first getting 
+the package from~\url{https://github.com/flatironinstitute/fmm2d}. You will need to copy over the appropriate {\textit make.inc.$\star$} file, depending
+on your operating system and compiler installed to {\textit make.inc}  
+followed by running ``make matlab'' and ``matlab/startup\_fmm.m''.  For example on a windows machine, you would run the following from a command prompt
+\vspace*{2ex}\newline
+\ovalbox{copy make.inc.windows make.inc} \vspace*{1ex}\newline \ovalbox{make matlab} 
+\vspace*{2ex}\newline
+You would still need to run the ``matlab/startup\_fmm.m'' script from MATLAB to set the path.
+For detailed installation instructions see~\url{https://fmm2d.readthedocs.io/en/latest}. 
+If you are going this route, make sure that the path to the \textit{fmm2d/matlab} folder is higher in priority
+in your MATLAB path than the \textit{insect\_eye\_2d\_widget/fmm2d\_matlab\_binaries} folder. 
+
+
+\end{document}  
