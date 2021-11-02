@@ -13,4 +13,4 @@ The geometry can be specified either through an HDF5 file, or a matlab structure
 For documentation on geometry input see the [geometry design doc](https://github.com/mrachh/insect_eye_2d/geometry.pdf)
 
 For details on compressed installation instructions for all libraries and tests to verify accurate installation see
-the [installation instructions](https://github.com/mrachh/insect_eye_2d/installation.pdf)
+the [installation instructions](https://github.com/mrachh/insect_eye_2d_widget/blob/main/installation.pdf)
