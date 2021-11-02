@@ -434,7 +434,7 @@
   \vspace{4\baselineskip}
 
   {\raggedright
-  \LARGE \sffamily\bfseries Installation instructions\\}
+  \LARGE \sffamily\bfseries Input Geometry format\\}
     \hrulefill
   
   
@@ -442,57 +442,61 @@
 
  \vspace{\baselineskip}
 
+The geometry can be input either using an \texttt{hdf5} file format or a MATLAB struct stored as .mat format. The geometry is comprised of two half infinite half spaces, and a bunch of smaller components. The geometry is defined through a collection of vertices, curves and regions. Curves terminate, pass through or end at vertices, and regions are defined as the signed union of curves.  
 
-\section{chunkie}
-\subsection{Option 1: Command line installation}
-To get chunkie with all its dependencies, clone it from~\url{https://github.com/fastalgorithms/chunkie}
-as \vspace*{2ex}\newline
-\ovalbox{git clone --recurse-submodules https://github.com/fastalgorithms/chunkie.git}
-\vspace*{2ex}\newline
-You will need to switch to the \texttt{dev-rcip} branch to use the widget. This can be done by running
-\vspace*{2ex}\newline
-\ovalbox{git checkout dev-rcip} 
-\vspace*{2ex}\newline
-Then you can run \texttt{startup.m} to add both chunkie and its dependencies to the
-MATLAB path. 
+\subsection{Types of curves}
+\begin{itemize}
+\item \texttt{curvetype}=1: the curve is defined as the union of line segments
+\item \texttt{curvetype}=2: a sector of a circle passing through $(a,y_{0})$ and $(b,y_{0})$ with opening angle $\theta$ 
+\item \texttt{curvetype}= 3: a sine curve with $n$ half-wiggles passing through $(a,0)$ and $(b,0)$ and prescribed amplitude
+\begin{equation}
+(x(t),y(t)) = \left(a + (b-a)\cdot \frac{t}{n\pi}, Asin(t) \right) \quad t\in (0,n\pi) \, .
+\end{equation}
+\end{itemize}
+Note that for the last two curve types, the y components of the vertices must be identical. Support for rotated versions will be made available soon. See figure~\cref{fig:1} 
+for some illustrative curves.
 
-\subsection{Option 2: Package download and install}
-Download the \texttt{dev-rcip} branch of chunkie from~\url{https://github.com/fastalgorithms/chunkie} 
-and download FLAM from~\url{https://github.com/klho/FLAM}. In each of the respective directories
-run \texttt{startup.m} to add the relevant directories to the MATLAB path.
+There will also be two sem-infinite lines $(-\infty,0) \to (a,0)$ and $(b,0) \to (\infty,0)$ where $(a,0)$ and $(b,0)$ are specified by the user.
 
-\subsection{Testing the installation}
+\subsection{hdf5}
+The hdf5 file is structured as a collection of attributes for the geometry, a group called \texttt{curves} where each curve is a subgroup of the that group, and a group called \texttt{regions} where each region is a subgroup of that group. 
 
-In order to test the accurate installation of the correct version of the chunkie package,
-you can run \texttt{testclm4.m} located at \texttt{chunkie/clmtest}. 
-The code should run in a few seconds,
-(it takes less than 5 seconds on a 2019 Macbook Pro) and the last line should report 
-an error less than $10^{-12}$.
+\subsubsection{Attributes}
+Attributes unless stated otherwise are mandatory.
+\begin{itemize}
+\item \texttt{ndomain}: Number of domains
+\item \texttt{ncurve}: Number of curves
+\item \texttt{verts}: (2,nverts), $(x,y)$ coordinates of the vertices. The dataset must contain at least one vertex.
+\item \texttt{rnr}: (ndomain,1), real part of the refractive indices of each domain (optional, default value will be set to 1)
+\item \texttt{rni}: (ndomain,1), imaginary part of the refractive indices of each domain (optional, default value will be set to 0)
+\item \texttt{mode}: `te' or `tm', if unspecified or doesn't match either of the two options, the default mode will be `te' (optional).
+\item \texttt{lambda}: wavelength: Wavelength of the incident light
+\item \texttt{lvert}: verts(:,lvert) is the left vertex defining the negative half infinite line, i.e. the half line will extend from $(-\infty,0) \to (\textrm{verts}(1,\textrm{lvert}),0)$
+\item \texttt{rvert}: verts(:,rvert) is the right vertex defining the positive half infinite line, i.e. the half line will extend from $(\textrm{verts}(1,\textrm{rvert}),0) \to(\infty,0)$
 
-If you can't find the relevant folder, then with
-high likelihood you are on the incorrect branch.
+\end{itemize}
+\subsubsection{Curves group}
+The \texttt{curves} group, has \texttt{ncurve} subgroups labelled $1,2, \ldots$ \texttt{ncurve}. Each subgroup has the following attributes
+\paragraph{Curve attributes}
+\begin{itemize}
+\item \texttt{curvetype}: Current supported curvetypes are $1,2$, or $3$, see above.
+\item \texttt{curve\_id}: Identifier for defining the curve, must be between $1,2,\ldots$ \texttt{ncurve}.
+\item \texttt{vert\_list}: For curve type 1, must be the list of vertices defining the union of line segments. For example, if \texttt{vert\_list} = $[1,4,3]$ for curve type $1$, then the curve would be defined as the line segments $\textrm{verts}(:,1)\to \textrm{verts}(:,4) \to \textrm{verts}(:,3)$. If \texttt{curvetype} 2 or 3, vert\_list must contain two vertices, the points $(a,y_{0})$ and $(b,y_{0})$ are given by $(a,y_{0})=\textrm{verts}(:,\textrm{vert\_list}(1))$ and $(b,y_0)=\textrm{verts}(:,\textrm{vert\_list}(2))$
+\item \texttt{theta}: If \texttt{curvetype}=2, $\theta$ defines the opening angle (optional, if unspecified, it is set to pi/2).
+\item \texttt{ifconvex}: If \texttt{curvetype}=2, \texttt{ifconvex} = 0, implies the center of the circle is below the y coordinate of the prescribed points, and \texttt{ifconvex} = 1, implies the center of the circle is above (optional, if unspecified \texttt{ifconvex} =0). 
+\item \texttt{nwiggles}: If \texttt{curvetype}=3, \texttt{nwiggles} = n above (optional, if unspecified, \texttt{nwiggles} = 1).
+\item \texttt{amplitude}: If \texttt{curvetype}=3, \texttt{amplitude} = A above (optional, if unspecified, \texttt{amplitude} = 1).
+\end{itemize}
 
+\subsubsection{Regions group}
+The \texttt{regions} group, has \texttt{ndomain} subgroups labelled $1,2,\ldots $ \texttt{ndomain}. Each subgroup has the following attributes
+\paragraph{Region attributes}
+\begin{itemize}
+\item abs
+\end{itemize}
+\subsection{MATLAB struct}
 
-\section{fmm2d}
-For some of the post processing, you will also need the matlab interfaces from the fast
-multipole library in two dimensions. You can try using the precompiled MATLAB interfaces
-available in the \texttt{fmm2d\_matlab\_binaries} folder. To make them available to the widget, 
-just run \texttt{startup\_fmm2d.m} to add the relevant folder to the PATH. 
-
-To verify successful installation of the fmm2d library, you can run the {\texttt test\_fmm.m} 
-script in the {\texttt folder}. It should report back with \texttt{Successfully completed 2 out of 2 tests in fmm2d package}.
-
-In case the installation fails, you can generate the MATLAB interfaces for the fmm2d library by first getting 
-the package from~\url{https://github.com/flatironinstitute/fmm2d}. You will need to copy over the appropriate {\texttt make.inc.$\star$} file, depending
-on your operating system and compiler installed to {\texttt make.inc}  
-followed by running \texttt{make matlab} and \texttt{matlab/startup\_fmm.m}.  For example on a windows machine, you would run the following from a command prompt
-\vspace*{2ex}\newline
-\ovalbox{copy make.inc.windows make.inc} \vspace*{1ex}\newline \ovalbox{make matlab} 
-\vspace*{2ex}\newline
-You would still need to run the \texttt{matlab/startup\_fmm.m} script from MATLAB to set the path.
-For detailed installation instructions see~\url{https://fmm2d.readthedocs.io/en/latest}. 
-If you are going this route, make sure that the path to the \texttt{fmm2d/matlab} folder is higher in priority
-in your MATLAB path than the \texttt{insect\_eye\_2d\_widget/fmm2d\_matlab\_binaries} folder. 
+\subsection{Example}
 
 
 \end{document}  
