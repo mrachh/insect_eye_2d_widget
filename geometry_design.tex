@@ -456,10 +456,10 @@ The geometry can be input either using an \texttt{hdf5} file format or a MATLAB 
 Note that for the last two curve types, the y components of the vertices must be identical. Support for rotated versions will be made available soon. See figure~\cref{fig:1} 
 for some illustrative curves.
 
-There will also be two sem-infinite lines $(-\infty,0) \to (a,0)$ and $(b,0) \to (\infty,0)$ where $(a,0)$ and $(b,0)$ are specified by the user.
+There will also be two sem-infinite lines $(-\infty,0) \to (a,0)$ and $(b,0) \to (\infty,0)$ where $(a,0)$ and $(b,0)$ are specified by the user. These should not be input as curves, and will be automatically generated later, only the left and right vertices need to be specified.
 
 \subsection{hdf5}
-The hdf5 file is structured as a collection of attributes for the geometry, a group called \texttt{curves} where each curve is a subgroup of the that group, and a group called \texttt{regions} where each region is a subgroup of that group. 
+The hdf5 file is structured as a collection of attributes for the geometry, a group called \texttt{curves} where each curve is a subgroup of the that group, and a group called \texttt{regions} where each region is a subgroup of that group. For an example, see \texttt{test1.h5}.
 
 \subsubsection{Attributes}
 Attributes unless stated otherwise are mandatory.
@@ -470,17 +470,19 @@ Attributes unless stated otherwise are mandatory.
 \item \texttt{rnr}: (ndomain,1), real part of the refractive indices of each domain (optional, default value will be set to 1)
 \item \texttt{rni}: (ndomain,1), imaginary part of the refractive indices of each domain (optional, default value will be set to 0)
 \item \texttt{mode}: `te' or `tm', if unspecified or doesn't match either of the two options, the default mode will be `te' (optional).
-\item \texttt{lambda}: wavelength: Wavelength of the incident light
+\item \texttt{lambda}: wavelength: Wavelength of the incident light. If unspecified, default value is $0.38$.
 \item \texttt{lvert}: verts(:,lvert) is the left vertex defining the negative half infinite line, i.e. the half line will extend from $(-\infty,0) \to (\textrm{verts}(1,\textrm{lvert}),0)$
 \item \texttt{rvert}: verts(:,rvert) is the right vertex defining the positive half infinite line, i.e. the half line will extend from $(\textrm{verts}(1,\textrm{rvert}),0) \to(\infty,0)$
-
+\item \texttt{xylim}: (4,1) \texttt{xmin}, \texttt{xmax}, \texttt{ymin}, \texttt{ymax} for plotting the fields, optional, if unspecified, let $d$ denote the size of the smallest
+square containing all vertices and let $c$ denote the center of that square, then \texttt{xylim} will be set to a square centered at $c$ of size $2d$.
+\item \texttt{ngr}: number of targets in each dimension. If unspecified, \texttt{ngr} = 300.
 \end{itemize}
 \subsubsection{Curves group}
 The \texttt{curves} group, has \texttt{ncurve} subgroups labelled $1,2, \ldots$ \texttt{ncurve}. Each subgroup has the following attributes
 \paragraph{Curve attributes}
 \begin{itemize}
 \item \texttt{curvetype}: Current supported curvetypes are $1,2$, or $3$, see above.
-\item \texttt{curve\_id}: Identifier for defining the curve, must be between $1,2,\ldots$ \texttt{ncurve}.
+\item \texttt{curve\_id}: curve identifier, must be between $1,2,\ldots$ \texttt{ncurve}.
 \item \texttt{vert\_list}: For curve type 1, must be the list of vertices defining the union of line segments. For example, if \texttt{vert\_list} = $[1,4,3]$ for curve type $1$, then the curve would be defined as the line segments $\textrm{verts}(:,1)\to \textrm{verts}(:,4) \to \textrm{verts}(:,3)$. If \texttt{curvetype} 2 or 3, vert\_list must contain two vertices, the points $(a,y_{0})$ and $(b,y_{0})$ are given by $(a,y_{0})=\textrm{verts}(:,\textrm{vert\_list}(1))$ and $(b,y_0)=\textrm{verts}(:,\textrm{vert\_list}(2))$
 \item \texttt{theta}: If \texttt{curvetype}=2, $\theta$ defines the opening angle (optional, if unspecified, it is set to pi/2).
 \item \texttt{ifconvex}: If \texttt{curvetype}=2, \texttt{ifconvex} = 0, implies the center of the circle is below the y coordinate of the prescribed points, and \texttt{ifconvex} = 1, implies the center of the circle is above (optional, if unspecified \texttt{ifconvex} =0). 
@@ -492,10 +494,18 @@ The \texttt{curves} group, has \texttt{ncurve} subgroups labelled $1,2, \ldots$ 
 The \texttt{regions} group, has \texttt{ndomain} subgroups labelled $1,2,\ldots $ \texttt{ndomain}. Each subgroup has the following attributes
 \paragraph{Region attributes}
 \begin{itemize}
-\item abs
+\item \texttt{region\_id}: region identifier, must be between $1,2,\ldots$ \texttt{ndomain}.
+\item \texttt{curve\_list}: list of curves which define the region. The sign of the curve denotes the orientation in which it is traversed. For example \texttt{curve\_list} = $[1,-4,3]$ implies that the region is defined by traversing curve $1$ forward, traversing curve $4$ backwards followed by traversing curve $3$ forwards. 
+
+A note on specifying the infinite regions. Recall that the user doesn't need to define the left and right semi-infinite lines defining the half planes. For the upper half plane, the user should define the traversal of the rest of the curves such that when the left line segment is appended to the start of the \texttt{curve\_list} and the right line segment is appended to the end of it, then that union would define the positively oriented boundary of the upper half plane. 
+For the lower half plane, the right line segment traversed backward will be appended to the start of the list and the left line segment traversed backward will be appended to the end of the list.
+\item \texttt{is\_inf}: Whether the region is infinite or not. For bounded regions, \texttt{is\_inf} =0, for the region containing $y \to + \infty$, \texttt{is\_inf} = 1, and for the region containing $y \to - \infty$, \texttt{is\_inf} = -1.
+Note that there should be exactly one region with \texttt{is\_inf} = 1, and one region with \texttt{is\_inf} = -1.
 \end{itemize}
 \subsection{MATLAB struct}
+The same data can be provided as a MATLAB struct as well. The \texttt{.mat} file should contain a single struct called \texttt{geom\_class}. The groups \texttt{curves, regions} are cell arrays. and the attributes are variables of the struct or the cell array. 
 
+For an example, see \texttt{test1.mat}.
 \subsection{Example}
 
 
