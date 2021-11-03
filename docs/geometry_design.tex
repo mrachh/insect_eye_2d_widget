@@ -453,8 +453,7 @@ The geometry can be input either using an \texttt{hdf5} file format or a MATLAB 
 (x(t),y(t)) = \left(a + (b-a)\cdot \frac{t}{n\pi}, Asin(t) \right) \quad t\in (0,n\pi) \, .
 \end{equation}
 \end{itemize}
-Note that for the last two curve types, the y components of the vertices must be identical. Support for rotated versions will be made available soon. See figure~\cref{fig:1} 
-for some illustrative curves.
+Note that for the last two curve types, the y components of the vertices must be identical. Support for rotated versions will be made available soon. See figure~\cref{fig:1} for some illustrative curves.
 
 There will also be two sem-infinite lines $(-\infty,0) \to (a,0)$ and $(b,0) \to (\infty,0)$ where $(a,0)$ and $(b,0)$ are specified by the user. These should not be input as curves, and will be automatically generated later, only the left and right vertices need to be specified.
 
@@ -483,9 +482,9 @@ The \texttt{curves} group, has \texttt{ncurve} subgroups labelled $1,2, \ldots$ 
 \begin{itemize}
 \item \texttt{curvetype}: Current supported curvetypes are $1,2$, or $3$, see above.
 \item \texttt{curve\_id}: curve identifier, must be between $1,2,\ldots$ \texttt{ncurve}.
-\item \texttt{vert\_list}: For curve type 1, must be the list of vertices defining the union of line segments. For example, if \texttt{vert\_list} = $[1,4,3]$ for curve type $1$, then the curve would be defined as the line segments $\textrm{verts}(:,1)\to \textrm{verts}(:,4) \to \textrm{verts}(:,3)$. If \texttt{curvetype} 2 or 3, vert\_list must contain two vertices, the points $(a,y_{0})$ and $(b,y_{0})$ are given by $(a,y_{0})=\textrm{verts}(:,\textrm{vert\_list}(1))$ and $(b,y_0)=\textrm{verts}(:,\textrm{vert\_list}(2))$
+\item \texttt{vert\_list}: For curve type 1, must be the list of vertices defining the union of line segments. For example, if \texttt{vert\_list} = $[1,4,3]$ for curve type $1$, then the curve would be defined as the line segments $\textrm{verts}(:,1)\to \textrm{verts}(:,4) \to \textrm{verts}(:,3)$. If \texttt{curvetype} 2 or 3, vert\_list must contain two vertices, the points $(a,y_{0})$ and $(b,y_{0})$ are given by $(a,y_{0})=\textrm{verts}(:,\textrm{vert\_list}(1))$ and $(b,y_0)=\textrm{verts}(:,\textrm{vert\_list}(2))$.
 \item \texttt{theta}: If \texttt{curvetype}=2, $\theta$ defines the opening angle (optional, if unspecified, it is set to pi/2).
-\item \texttt{ifconvex}: If \texttt{curvetype}=2, \texttt{ifconvex} = 0, implies the center of the circle is below the y coordinate of the prescribed points, and \texttt{ifconvex} = 1, implies the center of the circle is above (optional, if unspecified \texttt{ifconvex} =0). 
+\item \texttt{ifconvex}: If \texttt{curvetype}=2, \texttt{ifconvex} = 0, implies the center of the circle is below the y coordinate of the prescribed points, and \texttt{ifconvex} = 1, implies the center of the circle is above (optional, if unspecified \texttt{ifconvex} =0). {\color{red} Note: if \texttt{ifconvex} = 0, then the curve is traversed from $(b,y_{0}) \to (a,y_{0})$. Be mucho careful in this setting.}
 \item \texttt{nwiggles}: If \texttt{curvetype}=3, \texttt{nwiggles} = n above (optional, if unspecified, \texttt{nwiggles} = 1).
 \item \texttt{amplitude}: If \texttt{curvetype}=3, \texttt{amplitude} = A above (optional, if unspecified, \texttt{amplitude} = 1).
 \end{itemize}
@@ -495,7 +494,7 @@ The \texttt{regions} group, has \texttt{ndomain} subgroups labelled $1,2,\ldots 
 \paragraph{Region attributes}
 \begin{itemize}
 \item \texttt{region\_id}: region identifier, must be between $1,2,\ldots$ \texttt{ndomain}.
-\item \texttt{curve\_list}: list of curves which define the region. The sign of the curve denotes the orientation in which it is traversed. For example \texttt{curve\_list} = $[1,-4,3]$ implies that the region is defined by traversing curve $1$ forward, traversing curve $4$ backwards followed by traversing curve $3$ forwards. 
+\item \texttt{icurve\_list}: list of curves which define the region. The sign of the curve denotes the orientation in which it is traversed. For example \texttt{icurve\_list} = $[1,-4,3]$ implies that the region is defined by traversing curve $1$ forward, traversing curve $4$ backwards followed by traversing curve $3$ forwards. 
 
 A note on specifying the infinite regions. Recall that the user doesn't need to define the left and right semi-infinite lines defining the half planes. For the upper half plane, the user should define the traversal of the rest of the curves such that when the left line segment is appended to the start of the \texttt{curve\_list} and the right line segment is appended to the end of it, then that union would define the positively oriented boundary of the upper half plane. 
 For the lower half plane, the right line segment traversed backward will be appended to the start of the list and the left line segment traversed backward will be appended to the end of the list.
@@ -503,10 +502,131 @@ For the lower half plane, the right line segment traversed backward will be appe
 Note that there should be exactly one region with \texttt{is\_inf} = 1, and one region with \texttt{is\_inf} = -1.
 \end{itemize}
 \subsection{MATLAB struct}
-The same data can be provided as a MATLAB struct as well. The \texttt{.mat} file should contain a single struct called \texttt{geom\_class}. The groups \texttt{curves, regions} are cell arrays. and the attributes are variables of the struct or the cell array. 
+The same data can be provided as a MATLAB struct as well. The \texttt{.mat} file should contain a single struct called \texttt{geom\_class}. The groups \texttt{curves, regions} are cell arrays, and the attributes are variables of the struct or the cell array. 
 
 For an example, see \texttt{test1.mat}.
 \subsection{Example}
+Consider the geometry in \texttt{test1.h5} or \texttt{test1.mat} shown in~\cref{fig:1}. We have $6$ vertices as labelled in the figure, $8$ \texttt{curves} and $5$ \texttt{regions}. The \texttt{attributes} or \texttt{variables} are defined to be as follows
+\begin{itemize}
+\item \texttt{ndomain}  = 5
+\item \texttt{ncurve} = 8
+\item \texttt{lvert} = 1
+\item \texttt{rvert} = 2
+\end{itemize} 
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.5\linewidth]{example_geom}
+\caption{Example geometry in test1.h5 and test1.mat}
+\end{center}
+\label{fig:1}
+\end{figure}
+
+
+For the group or cell \texttt{curves}, the attributes or variables are given by:
+\begin{itemize}
+\item Group $/\texttt{curves}/1$ or \texttt{curves\{1\}}
+\begin{itemize}
+\item \texttt{curvetype} = 2
+\item \texttt{curve\_id} = 1
+\item \texttt{vert\_list} = $[1,2]$
+\item \texttt{ifconvex} = 0
+\item \texttt{theta} = $\pi/2.4$
+\end{itemize}
+\item Group $/\texttt{curves}/2$ or \texttt{curves\{2\}}
+\begin{itemize}
+\item \texttt{curvetype} = 3
+\item \texttt{curve\_id} = 2
+\item \texttt{vert\_list} = $[1,2]$
+\item \texttt{nwiggles} = 3
+\item \texttt{amplitude} = $0.5$
+\end{itemize}
+\item Group $/\texttt{curves}/3$ or \texttt{curves\{3\}}
+\begin{itemize}
+\item \texttt{curvetype} = 1
+\item \texttt{curve\_id} = 3
+\item \texttt{vert\_list} = $[1,3]$
+\end{itemize}
+\item Group $/\texttt{curves}/4$ or \texttt{curves\{4\}}
+\begin{itemize}
+\item \texttt{curvetype} = 1
+\item \texttt{curve\_id} = 4
+\item \texttt{vert\_list} = $[4,2]$
+\end{itemize}
+
+\item Group $/\texttt{curves}/5$ or \texttt{curves\{5\}}
+\begin{itemize}
+\item \texttt{curvetype} = 1
+\item \texttt{curve\_id} = 5
+\item \texttt{vert\_list} = $[3,4]$
+\end{itemize}
+
+\item Group $/\texttt{curves}/6$ or \texttt{curves\{6\}}
+\begin{itemize}
+\item \texttt{curvetype} = 1
+\item \texttt{curve\_id} = 6
+\item \texttt{vert\_list} = $[3,5]$
+\end{itemize}
+
+\item Group $/\texttt{curves}/7$ or \texttt{curves\{7\}}
+\begin{itemize}
+\item \texttt{curvetype} = 1
+\item \texttt{curve\_id} = 7
+\item \texttt{vert\_list} = $[6,4]$
+\end{itemize}
+
+\item Group $/\texttt{curves}/8$ or \texttt{curves\{8\}}
+\begin{itemize}
+\item \texttt{curvetype} = 2
+\item \texttt{curve\_id} = 8
+\item \texttt{vert\_list} = $[5,6]$
+\item \texttt{ifconvex} = 1
+\item \texttt{theta} = $3\pi/4$
+\end{itemize}
+\end{itemize}
+
+
+For the group or cell \texttt{regions}, the attributes or variables are given by:
+\begin{itemize}
+\item Group $/\texttt{regions}/1$ or \texttt{regions\{1\}}
+\begin{itemize}
+\item \texttt{region\_id} = 1
+\item \texttt{icurve\_list} = $[-1]$
+\item \texttt{is\_inf} = 1
+\end{itemize}
+
+\item Group $/\texttt{regions}/2$ or \texttt{regions\{2\}}
+\begin{itemize}
+\item \texttt{region\_id} = 2
+\item \texttt{icurve\_list} = $[-4,-7,-8,-6,-3]$
+\item \texttt{is\_inf} = -1
+\end{itemize}
+
+
+\item Group $/\texttt{regions}/3$ or \texttt{regions\{3\}}
+\begin{itemize}
+\item \texttt{region\_id} = 3
+\item \texttt{icurve\_list} = $[1,2]$
+\item \texttt{is\_inf} = 0
+\end{itemize}
+
+
+\item Group $/\texttt{regions}/4$ or \texttt{regions\{4\}}
+\begin{itemize}
+\item \texttt{region\_id} = 4
+\item \texttt{icurve\_list} = $[-2,3,5,4]$
+\item \texttt{is\_inf} = 0
+\end{itemize}
+
+
+\item Group $/\texttt{regions}/5$ or \texttt{regions\{5\}}
+\begin{itemize}
+\item \texttt{region\_id} = 5
+\item \texttt{icurve\_list} = $[-5,6,8,7]$
+\item \texttt{is\_inf} = 0
+\end{itemize}
+
+\end{itemize}
 
 
 \end{document}  
