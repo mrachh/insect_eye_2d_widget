@@ -3,3 +3,4 @@
 *.out
 *.synctex.gz
 .DS_Store
+miniwasp_out.mat
