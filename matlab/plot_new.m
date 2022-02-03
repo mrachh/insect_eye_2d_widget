@@ -40,7 +40,7 @@ function [chnk_plot_handle] = plot_new(ax,obj,varargin)
                 ys = [ys(:); ys(1)];
             end
     
-            h = plot(ax,xs,ys,varargin{:},'LineWidth',4,'Color','red');
+            h = plot(ax,real(xs),real(ys),varargin{:},'LineWidth',2,'Color','red');
             chnk_plot_handle = [chnk_plot_handle , h];
             %hold on
             istart = istart+nchs(ii);
