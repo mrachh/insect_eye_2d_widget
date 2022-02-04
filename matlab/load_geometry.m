@@ -5,9 +5,7 @@
  geom_class = clm.load_geom_gui(fname);
  clmparams = clm.setup_geom(geom_class);
  
- figure;
- cla();
- ax_plot = gca;
+ 
  chnk_array = clm.get_geom_clmparams(clmparams);
  fprintf('Initializing targets\n');
  
@@ -22,7 +20,7 @@
  targs(1,:) = xxtarg(:);
  targs(2,:) = yytarg(:);
  [~,ntarg] = size(targs); 
- clear xtarg ytarg xxtarg yytarg
+ clear xtarg ytarg 
 
  [targdomain,tid] = clm.finddomain_gui(chnk_array, ...
       clmparams,targs);

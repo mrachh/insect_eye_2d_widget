@@ -1,4 +1,6 @@
-
+figure;
+cla();
+ax_plot = gca;
 if(exist('hs_chunkie'))
     delete(hs_chunkie);
 end
