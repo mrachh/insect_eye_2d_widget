@@ -1,14 +1,12 @@
-function [U,varargout] = hfmm2d(eps,zk,srcinfo,pg,varargin)
+function [U,varargout] = lfmm2d(eps,srcinfo,pg,varargin)
 %
 %
-%  This subroutine computes the N-body Helmholtz
+%  This subroutine computes the N-body Laplace
 %  interactions and its gradients in two dimensions where 
-%  the interaction kernel is given by $i/4 H_{0}^{(1)}kr)$, with
-%  $H_{0}^{(1)}$ being the Hankel function of the first kind of order
-%  0
+%  the interaction kernel is given by $\log(r)$
 % 
-%    u(x) = \frac{i}{4}\sum_{j=1}^{N} c_{j} H_{0}(k\|x-x_{j}\|) - d_{j} v_{j}
-%    \cdot \nabla \left( H_{0}(k\|x-x_{j} \|) \right)
+%    u(x) = \frac{i}{4}\sum_{j=1}^{N} c_{j} \log(\|x-x_{j}\|) - d_{j} v_{j}
+%    \cdot \nabla \left( \log(\|x-x_{j} \|) \right)
 %
 %  where $c_{j}$ are the charge densities, $d_{j}$ are the dipole
 %  densities,
@@ -23,8 +21,6 @@ function [U,varargout] = hfmm2d(eps,zk,srcinfo,pg,varargin)
 %
 %  -  eps: double   
 %        precision requested
-%  -  zk: complex
-%        Helmholtz parameter, k
 %  -  srcinfo: structure
 %        structure containing sourceinfo
 %     
@@ -85,18 +81,18 @@ function [U,varargout] = hfmm2d(eps,zk,srcinfo,pg,varargin)
 %
 %
 %  Examples:
-%  U = hfmm3d(eps,zk,srcinfo,pg)
+%  U = lfmm2d(eps,srcinfo,pg)
 %     Call the FMM for sources only with default arguments
-%  U = hfmm3d(eps,zk,srcinfo,pg,targ,pgt)
+%  U = lfmm2d(eps,srcinfo,pg,targ,pgt)
 %     Call the FMM for sources + targets with default arguments
-%  U = hfmm3d(eps,zk,srcinfo,pg,opts)
+%  U = lfmm2d(eps,srcinfo,pg,opts)
 %     Call the FMM for sources only with user specified arguments
-%  U = hfmm3d(eps,zk,srcinfo,pg,targ,pgt)
+%  U = lfmm2d(eps,srcinfo,pg,targ,pgt)
 %     Call the FMM for sources + targets with user specified arguments 
-%  [U,ier] = hfmm3d(eps,zk,srcinfo,pg)
+%  [U,ier] = lfmm2d(eps,srcinfo,pg)
 %     Call the FMM for sources only with default arguments and returns
 %     the error code for the FMM as well
-%  [U,ier,timeinfo] = hfmm3d(eps,zk,srcinfo,pg)
+%  [U,ier,timeinfo] = lfmm2d(eps,srcinfo,pg)
 %     Call the FMM for sources only with default arguments, returns
 %     the error code for the FMM as well and the time split
 %      
@@ -117,27 +113,27 @@ function [U,varargout] = hfmm2d(eps,zk,srcinfo,pg,varargin)
   grad = complex(zeros(nd*2,ns));
   hess = complex(zeros(nd*3,ns));
   
-  if( nargin < 4)
+  if( nargin < 3)
     disp('Not enough input arguments, exiting\n');
     return;
   end
-  if( nargin == 4 )
+  if( nargin == 3 )
     nt = 0;
     pgt = 0;
     targ = zeros(2,1);
     opts = [];
-  elseif (nargin == 5)
+  elseif (nargin == 4)
     nt = 0;
     pgt = 0;
     targ = zeros(2,1);
     opts = varargin{1};
-  elseif (nargin == 6)
+  elseif (nargin == 5)
     targ = varargin{1};
     pgt = varargin{2};
     [m,nt] = size(targ);
     assert(m==2,'First dimension of targets must be 2');
     opts = [];
-  elseif (nargin == 7)
+  elseif (nargin == 6)
     targ = varargin{1};
     pgt = varargin{2};
     [m,nt] = size(targ);
@@ -199,8 +195,8 @@ function [U,varargout] = hfmm2d(eps,zk,srcinfo,pg,varargin)
   end
   iper = 1;
   timeinfo = zeros(8,1);
-  mex_id_ = 'hfmm2d_ndiv(i int[x], i double[x], i dcomplex[x], i int[x], i double[xx], i int[x], i dcomplex[xx], i int[x], i dcomplex[xx], i double[xx], i int[x], i int[x], io dcomplex[xx], io dcomplex[xx], io dcomplex[xx], i int[x], i double[xx], i int[x], io dcomplex[xx], io dcomplex[xx], io dcomplex[xx], i int[x], i int[x], i int[x], io double[x], io int[x])';
-[pot, grad, hess, pottarg, gradtarg, hesstarg, timeinfo, ier] = fmm2d(mex_id_, nd, eps, zk, ns, sources, ifcharge, charges, ifdipole, dipstr, dipvec, iper, pg, pot, grad, hess, nt, targ, pgt, pottarg, gradtarg, hesstarg, ndiv, idivflag, ifnear, timeinfo, ier, 1, 1, 1, 1, 2, ns, 1, nd, ns, 1, nd, ns, nd2, ns, 1, 1, nd, ns, nd2, ns, nd3, ns, 1, 2, ntuse, 1, nd, ntuse, nd2, ntuse, nd3, ntuse, 1, 1, 1, 8, 1);
+  mex_id_ = 'lfmm2d_ndiv(i int[x], i double[x], i int[x], i double[xx], i int[x], i dcomplex[xx], i int[x], i dcomplex[xx], i double[xx], i int[x], i int[x], io dcomplex[xx], io dcomplex[xx], io dcomplex[xx], i int[x], i double[xx], i int[x], io dcomplex[xx], io dcomplex[xx], io dcomplex[xx], i int[x], i int[x], i int[x], io double[x], io int[x])';
+[pot, grad, hess, pottarg, gradtarg, hesstarg, timeinfo, ier] = fmm2d(mex_id_, nd, eps, ns, sources, ifcharge, charges, ifdipole, dipstr, dipvec, iper, pg, pot, grad, hess, nt, targ, pgt, pottarg, gradtarg, hesstarg, ndiv, idivflag, ifnear, timeinfo, ier, 1, 1, 1, 2, ns, 1, nd, ns, 1, nd, ns, nd2, ns, 1, 1, nd, ns, nd2, ns, nd3, ns, 1, 2, ntuse, 1, nd, ntuse, nd2, ntuse, nd3, ntuse, 1, 1, 1, 8, 1);
 
   U.pot = [];
   U.grad = [];

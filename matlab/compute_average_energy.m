@@ -25,13 +25,12 @@ if(strcmpi(clmparams.mode,'te'))
        abs(zztarg(:).').^2;
 else
 
-
     zztarg_plot_test = (abs(zztarg_grad(1,:)).^2 + ...
        abs(zztarg_grad(2,:)).^2)*clmparams.lambda^2/4/pi^2 + ... 
        abs(zztarg(:).').^2.*abs(nr_region).^2;
 end
 
 for i=1:clmparams.ndomain
-    avg_energy(i) = average(zztarg_plot_test(targlist{i}));
+    avg_energy(i) = mean(zztarg_plot_test(targlist{i}));
     max_energy(i) = max(zztarg_plot_test(targlist{i}));
 end
