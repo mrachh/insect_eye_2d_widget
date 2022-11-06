@@ -21,9 +21,11 @@
  targs(2,:) = yytarg(:);
  [~,ntarg] = size(targs); 
  clear xtarg ytarg 
-
- [targdomain,tid] = clm.finddomain_gui(chnk_array, ...
-      clmparams,targs);
+ 
+ opts_flag = [];
+ opts_flag.fac = 0.3;
+ [targdomain,tid,flags] = clm.finddomain_gui(chnk_array, ...
+      clmparams,targs,opts_flag);
  tid = unique(tid);
  ntid = setdiff(1:ntarg,tid);
  targlist = cell(1,nregions);

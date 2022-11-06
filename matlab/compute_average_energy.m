@@ -30,7 +30,12 @@ else
        abs(zztarg(:).').^2.*abs(nr_region).^2;
 end
 
+[~,ntarg] = size(targs);
+nnind = false(ntarg,1);
+nnind(ntid) = 1;
+
+
 for i=1:clmparams.ndomain
-    avg_energy(i) = mean(zztarg_plot_test(targlist{i}));
-    max_energy(i) = max(zztarg_plot_test(targlist{i}));
+    avg_energy(i) = mean(zztarg_plot_test(intersect(targlist{i}.',ntid)));
+    max_energy(i) = max(zztarg_plot_test(intersect(targlist{i}.',ntid)));
 end

@@ -33,14 +33,18 @@ else
        abs(zztarg(:).').^2.*abs(nr_region).^2;
 end
 
+
+zztarg_plot_test(tid) = griddata(targs(1,ntid),targs(2,ntid), ...
+  zztarg_plot_test(ntid),targs(1,tid),targs(2,tid));
 zztarg_plot = reshape(zztarg_plot_test,size(xxtarg));
 
-zztarg_test = zztarg_plot(:);
-nnind = false(ntarg,1);
-nnind(ntid) = 1;
-zztarg_test2 = zztarg_test(~isnan(zztarg_test) & nnind);
-minu = max(min(zztarg_test2(:)));
-maxu = min(max(zztarg_test2(:)));
+% zztarg_test = zztarg_plot(:);
+% nnind = false(ntarg,1);
+% nnind(ntid) = 1;
+% zztarg_test2 = zztarg_test(~isnan(zztarg_test) & nnind);
+
+minu = max(min(zztarg_plot_test(:)));
+maxu = min(max(zztarg_plot_test(:)));
 
 
 f_handle = pcolor(axtmp,xxtarg,yytarg,zztarg_plot);
