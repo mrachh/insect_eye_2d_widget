@@ -83,10 +83,6 @@ for cint_pig = 1:num_pig
              solve();
              compute_average_energy();
              
-             if direction == 5
-                 test_accuracy();
-             end
-
              for cint_reg = 1:num_regions
                  avg_energies(cint_wave,cint_dir,cint_reg,cint_pig) = avg_energy(cint_reg);
                  max_energies(cint_wave,cint_dir,cint_reg,cint_pig) = max_energy(cint_reg);
